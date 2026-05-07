@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() { return request.auth != null; }
+    function isEmailVerified() { return request.auth.token.email_verified == true; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    function isValidProduct(data) {
+        return data.name is string && data.name.size() > 0 && data.name.size() <= 100
+            && data.description is string && data.description.size() <= 500
+            && data.price is number && data.price >= 0
+            && data.fileUrl is string && data.fileUrl.size() > 0 && data.fileUrl.size() <= 2048
+            && (data.imageUrl is string && data.imageUrl.size() <= 2048)
+            && data.ownerId is string && data.ownerId == request.auth.uid
+            && data.createdAt is timestamp
+            && data.updatedAt is timestamp;
+    }
+
+    match /products/{productId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isSignedIn()
+            && isValidId(productId)
+            && isValidProduct(incoming())
+            && incoming().createdAt == request.time
+            && incoming().updatedAt == request.time;
+      allow update: if isSignedIn()
+            && isValidProduct(incoming())
+            && incoming().updatedAt == request.time
+            && incoming().ownerId == existing().ownerId
+            && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'description', 'price', 'fileUrl', 'imageUrl', 'updatedAt']);
+      allow delete: if isSignedIn() && existing().ownerId == request.auth.uid;
+    }
+  }
+}

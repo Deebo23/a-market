@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Almarai:wght@300;400;700;800&family=Outfit:wght@400;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Almarai", "Inter", system-ui, sans-serif;
+  --font-heading: "Outfit", "Almarai", system-ui, sans-serif;
+  --color-primary: #020D1F; /* Very Dark Blue */
+  --color-accent: #C5A059;  /* Sophisticated Gold */
+  --color-accent-light: #E5D5B7;
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #F8F9FA;
+  
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-primary selection:bg-accent/30;
+    scroll-behavior: smooth;
+  }
+}
+
+.luxury-shadow {
+  shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #C5A059 0%, #E5D5B7 50%, #C5A059 100%);
+}
+
+[dir="rtl"] {
+  text-align: right;
+}

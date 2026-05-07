@@ -1,0 +1,25 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "A digital product",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Product name" },
+        "description": { "type": "string", "description": "Product description" },
+        "price": { "type": "number", "description": "Product price" },
+        "fileUrl": { "type": "string", "description": "Public URL to the digital file" },
+        "ownerId": { "type": "string", "description": "Owner Uid" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Update timestamp" }
+      },
+      "required": ["name", "price", "fileUrl", "ownerId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Collection of products"
+    }
+  }
+}
